@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Tantra.exe · Breath</title>
+  <title>Tantra.exe</title>
 
-  <!-- Elegant, readable fonts -->
+  <!-- Shared fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -17,10 +17,6 @@
       --gold-soft: rgba(201,162,77,0.25);
       --ink: #f4f4f6;
       --mist: #9a9aa6;
-
-      --inhale: #6fa8dc;
-      --hold: #8e7cc3;
-      --exhale: #c9a24d;
     }
 
     * { box-sizing: border-box; }
@@ -37,10 +33,10 @@
       font-family: "Inter", system-ui, sans-serif;
     }
 
-    .ritual {
-      width: 360px;
-      padding: 46px 38px;
-      border-radius: 22px;
+    .landing {
+      width: 380px;
+      padding: 54px 42px;
+      border-radius: 24px;
       background:
         linear-gradient(180deg, var(--bg-mid), #0f0f14);
       box-shadow:
@@ -51,13 +47,13 @@
       overflow: hidden;
     }
 
-    /* Soft colour bloom */
-    .ritual::before {
+    /* Ambient glow */
+    .landing::before {
       content: "";
       position: absolute;
       inset: -40%;
       background: radial-gradient(circle, var(--gold-soft), transparent 60%);
-      opacity: 0.35;
+      opacity: 0.3;
       pointer-events: none;
     }
 
@@ -66,158 +62,69 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       opacity: 0.85;
     }
 
-    .phase {
+    h1 {
       font-family: "Cormorant Garamond", serif;
-      font-size: 2.2rem;
+      font-size: 2.6rem;
       font-weight: 500;
-      margin-bottom: 8px;
-      transition: color 0.6s ease;
+      margin: 0 0 10px;
     }
 
-    .round {
-      font-size: 0.85rem;
+    .subtitle {
       color: var(--mist);
-      margin-bottom: 26px;
-    }
-
-    .count {
-      font-family: "Cormorant Garamond", serif;
-      font-size: 3.6rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1.6;
       margin-bottom: 34px;
-      line-height: 1;
-      transition: transform 0.4s ease;
     }
 
-    .pulse {
-      transform: scale(1.06);
-    }
-
-    button {
-      background: none;
+    a {
+      display: inline-block;
+      text-decoration: none;
       border: 1px solid var(--gold);
       color: var(--gold);
-      padding: 12px 36px;
+      padding: 14px 42px;
       border-radius: 999px;
       font-size: 0.95rem;
       letter-spacing: 1px;
-      cursor: pointer;
       transition: all 0.35s ease;
     }
 
-    button:hover {
+    a:hover {
       background: rgba(201,162,77,0.12);
-      box-shadow: 0 0 20px rgba(201,162,77,0.25);
+      box-shadow: 0 0 24px rgba(201,162,77,0.25);
+    }
+
+    .whisper {
+      margin-top: 28px;
+      font-size: 0.75rem;
+      color: var(--mist);
+      opacity: 0.7;
+      font-style: italic;
     }
   </style>
 </head>
 
 <body>
 
-<div class="ritual">
-  <div class="sigil">Tantra.exe</div>
-  <div class="phase" id="phase">Ready</div>
-  <div class="round" id="round">—</div>
-  <div class="count" id="count">—</div>
-  <button onclick="startBreathing()">Begin</button>
-</div>
+  <div class="landing">
+    <div class="sigil">Tantra.exe</div>
 
-<script>
-  /* ---------------- CONFIG ---------------- */
-  const phases = [
-    { name: "Inhale", time: 4, tone: 528, color: "var(--inhale)" },
-    { name: "Hold",   time: 4, tone: 432, color: "var(--hold)" },
-    { name: "Exhale", time: 6, tone: 396, color: "var(--exhale)" }
-  ];
+    <h1>Tantra.exe</h1>
 
-  const totalRounds = 6;
+    <div class="subtitle">
+      A ritual system for presence,<br>
+      connection, and embodied attention.
+    </div>
 
-  let round = 0;
-  let phaseIndex = 0;
-  let timer;
-  let audioCtx;
+    <a href="./breath/">Enter Breath</a>
 
-  /* ---------------- CHIME ---------------- */
-  function playChime(freq, duration = 0.45) {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const now = audioCtx.currentTime;
-
-    osc.type = "sine";
-    osc.frequency.value = freq;
-
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.22, now + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(now);
-    osc.stop(now + duration);
-  }
-
-  /* ---------------- FLOW ---------------- */
-  function startBreathing() {
-    clearInterval(timer);
-    round = 0;
-    phaseIndex = 0;
-    nextPhase();
-  }
-
-  function nextPhase() {
-    if (round >= totalRounds) {
-      document.getElementById("phase").innerText = "Stillness";
-      document.getElementById("round").innerText = "Six rounds complete";
-      document.getElementById("count").innerText = "✓";
-      document.getElementById("phase").style.color = "var(--gold)";
-      playChime(256, 1);
-      return;
-    }
-
-    const phase = phases[phaseIndex];
-    let remaining = phase.time;
-
-    const phaseEl = document.getElementById("phase");
-    const roundEl = document.getElementById("round");
-    const countEl = document.getElementById("count");
-
-    phaseEl.innerText = phase.name;
-    phaseEl.style.color = phase.color;
-    roundEl.innerText = `Round ${round + 1} of ${totalRounds}`;
-    countEl.innerText = remaining;
-
-    playChime(phase.tone);
-
-    timer = setInterval(() => {
-      remaining--;
-      countEl.innerText = remaining;
-      countEl.classList.remove("pulse");
-      void countEl.offsetWidth;
-      countEl.classList.add("pulse");
-
-      if (remaining <= 0) {
-        clearInterval(timer);
-        phaseIndex++;
-
-        if (phaseIndex >= phases.length) {
-          phaseIndex = 0;
-          round++;
-        }
-
-        setTimeout(nextPhase, 600);
-      }
-    }, 1000);
-  }
-</script>
+    <div class="whisper">
+      Begin where you are.
+    </div>
+  </div>
 
 </body>
 </html>
