@@ -1,120 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Tantra.exe — Breath</title>
+  <meta charset="UTF-8" />
+  <title>Tantra.exe · Breath</title>
+
+  <!-- Elegant, readable fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #0b0b0f;
-      --panel: #14141a;
-      --accent: #c9a24d;
-      --soft: #8a8a95;
-      --text: #f4f4f6;
+      --bg-dark: #0b0b0f;
+      --bg-mid: #15151c;
+      --gold: #c9a24d;
+      --gold-soft: rgba(201,162,77,0.25);
+      --ink: #f4f4f6;
+      --mist: #9a9aa6;
+
+      --inhale: #6fa8dc;
+      --hold: #8e7cc3;
+      --exhale: #c9a24d;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       height: 100vh;
       background:
-        radial-gradient(circle at top, #1a1a22 0%, #0b0b0f 60%);
+        radial-gradient(circle at top, #1a1a24 0%, var(--bg-dark) 60%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--text);
-      letter-spacing: 0.4px;
+      color: var(--ink);
+      font-family: "Inter", system-ui, sans-serif;
     }
 
     .ritual {
-      background: linear-gradient(180deg, #16161d, #101014);
-      border-radius: 18px;
-      padding: 42px 36px;
-      width: 340px;
-      text-align: center;
+      width: 360px;
+      padding: 46px 38px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, var(--bg-mid), #0f0f14);
       box-shadow:
-        0 30px 60px rgba(0,0,0,0.6),
-        inset 0 0 0 1px rgba(255,255,255,0.03);
+        0 40px 80px rgba(0,0,0,0.6),
+        inset 0 0 0 1px rgba(255,255,255,0.04);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Soft colour bloom */
+    .ritual::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle, var(--gold-soft), transparent 60%);
+      opacity: 0.35;
+      pointer-events: none;
     }
 
     .sigil {
-      font-size: 0.75rem;
-      letter-spacing: 2px;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 14px;
-      opacity: 0.9;
+      color: var(--gold);
+      margin-bottom: 18px;
+      opacity: 0.85;
     }
 
     .phase {
-      font-size: 1.9rem;
-      margin-bottom: 6px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2.2rem;
       font-weight: 500;
+      margin-bottom: 8px;
+      transition: color 0.6s ease;
     }
 
     .round {
       font-size: 0.85rem;
-      color: var(--soft);
-      margin-bottom: 22px;
+      color: var(--mist);
+      margin-bottom: 26px;
     }
 
     .count {
-      font-size: 3.4rem;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3.6rem;
       font-weight: 600;
+      margin-bottom: 34px;
       line-height: 1;
-      margin-bottom: 30px;
-      color: var(--text);
+      transition: transform 0.4s ease;
+    }
+
+    .pulse {
+      transform: scale(1.06);
     }
 
     button {
       background: none;
-      border: 1px solid rgba(201,162,77,0.5);
-      color: var(--accent);
-      padding: 12px 34px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 12px 36px;
       border-radius: 999px;
       font-size: 0.95rem;
-      cursor: pointer;
       letter-spacing: 1px;
-      transition: all 0.3s ease;
+      cursor: pointer;
+      transition: all 0.35s ease;
     }
 
     button:hover {
-      background: rgba(201,162,77,0.08);
-      border-color: var(--accent);
-    }
-
-    .fade {
-      animation: fadeIn 0.6s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
+      background: rgba(201,162,77,0.12);
+      box-shadow: 0 0 20px rgba(201,162,77,0.25);
     }
   </style>
 </head>
+
 <body>
 
 <div class="ritual">
   <div class="sigil">Tantra.exe</div>
-  <div class="phase fade" id="phase">Ready</div>
+  <div class="phase" id="phase">Ready</div>
   <div class="round" id="round">—</div>
-  <div class="count fade" id="count">—</div>
+  <div class="count" id="count">—</div>
   <button onclick="startBreathing()">Begin</button>
 </div>
 
 <script>
-  /* -------------------------
-     CONFIG
-  -------------------------- */
+  /* ---------------- CONFIG ---------------- */
   const phases = [
-    { name: "Inhale", time: 4, tone: 528 },
-    { name: "Hold",   time: 4, tone: 432 },
-    { name: "Exhale", time: 6, tone: 396 }
+    { name: "Inhale", time: 4, tone: 528, color: "var(--inhale)" },
+    { name: "Hold",   time: 4, tone: 432, color: "var(--hold)" },
+    { name: "Exhale", time: 6, tone: 396, color: "var(--exhale)" }
   ];
 
   const totalRounds = 6;
@@ -124,9 +141,7 @@
   let timer;
   let audioCtx;
 
-  /* -------------------------
-     CHIME
-  -------------------------- */
+  /* ---------------- CHIME ---------------- */
   function playChime(freq, duration = 0.45) {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -134,11 +149,11 @@
 
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
+    const now = audioCtx.currentTime;
 
     osc.type = "sine";
     osc.frequency.value = freq;
 
-    const now = audioCtx.currentTime;
     gain.gain.setValueAtTime(0, now);
     gain.gain.linearRampToValueAtTime(0.22, now + 0.03);
     gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -150,9 +165,7 @@
     osc.stop(now + duration);
   }
 
-  /* -------------------------
-     FLOW
-  -------------------------- */
+  /* ---------------- FLOW ---------------- */
   function startBreathing() {
     clearInterval(timer);
     round = 0;
@@ -165,6 +178,7 @@
       document.getElementById("phase").innerText = "Stillness";
       document.getElementById("round").innerText = "Six rounds complete";
       document.getElementById("count").innerText = "✓";
+      document.getElementById("phase").style.color = "var(--gold)";
       playChime(256, 1);
       return;
     }
@@ -172,12 +186,23 @@
     const phase = phases[phaseIndex];
     let remaining = phase.time;
 
-    updateText(phase.name, `Round ${round + 1} of ${totalRounds}`, remaining);
+    const phaseEl = document.getElementById("phase");
+    const roundEl = document.getElementById("round");
+    const countEl = document.getElementById("count");
+
+    phaseEl.innerText = phase.name;
+    phaseEl.style.color = phase.color;
+    roundEl.innerText = `Round ${round + 1} of ${totalRounds}`;
+    countEl.innerText = remaining;
+
     playChime(phase.tone);
 
     timer = setInterval(() => {
       remaining--;
-      document.getElementById("count").innerText = remaining;
+      countEl.innerText = remaining;
+      countEl.classList.remove("pulse");
+      void countEl.offsetWidth;
+      countEl.classList.add("pulse");
 
       if (remaining <= 0) {
         clearInterval(timer);
@@ -191,23 +216,6 @@
         setTimeout(nextPhase, 600);
       }
     }, 1000);
-  }
-
-  function updateText(phase, roundText, count) {
-    const p = document.getElementById("phase");
-    const r = document.getElementById("round");
-    const c = document.getElementById("count");
-
-    p.classList.remove("fade");
-    c.classList.remove("fade");
-    void p.offsetWidth; // reset animation
-
-    p.innerText = phase;
-    r.innerText = roundText;
-    c.innerText = count;
-
-    p.classList.add("fade");
-    c.classList.add("fade");
   }
 </script>
 
