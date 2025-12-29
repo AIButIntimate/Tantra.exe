@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tantra.exe — Breath</title>
+
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --panel: #14141a;
+      --accent: #c9a24d;
+      --soft: #8a8a95;
+      --text: #f4f4f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background:
+        radial-gradient(circle at top, #1a1a22 0%, #0b0b0f 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      letter-spacing: 0.4px;
+    }
+
+    .ritual {
+      background: linear-gradient(180deg, #16161d, #101014);
+      border-radius: 18px;
+      padding: 42px 36px;
+      width: 340px;
+      text-align: center;
+      box-shadow:
+        0 30px 60px rgba(0,0,0,0.6),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .sigil {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      opacity: 0.9;
+    }
+
+    .phase {
+      font-size: 1.9rem;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .round {
+      font-size: 0.85rem;
+      color: var(--soft);
+      margin-bottom: 22px;
+    }
+
+    .count {
+      font-size: 3.4rem;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 30px;
+      color: var(--text);
+    }
+
+    button {
+      background: none;
+      border: 1px solid rgba(201,162,77,0.5);
+      color: var(--accent);
+      padding: 12px 34px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: rgba(201,162,77,0.08);
+      border-color: var(--accent);
+    }
+
+    .fade {
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ritual">
+  <div class="sigil">Tantra.exe</div>
+  <div class="phase fade" id="phase">Ready</div>
+  <div class="round" id="round">—</div>
+  <div class="count fade" id="count">—</div>
+  <button onclick="startBreathing()">Begin</button>
+</div>
+
+<script>
+  /* -------------------------
+     CONFIG
+  -------------------------- */
+  const phases = [
+    { name: "Inhale", time: 4, tone: 528 },
+    { name: "Hold",   time: 4, tone: 432 },
+    { name: "Exhale", time: 6, tone: 396 }
+  ];
+
+  const totalRounds = 6;
+
+  let round = 0;
+  let phaseIndex = 0;
+  let timer;
+  let audioCtx;
+
+  /* -------------------------
+     CHIME
+  -------------------------- */
+  function playChime(freq, duration = 0.45) {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.value = freq;
+
+    const now = audioCtx.currentTime;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.22, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start(now);
+    osc.stop(now + duration);
+  }
+
+  /* -------------------------
+     FLOW
+  -------------------------- */
+  function startBreathing() {
+    clearInterval(timer);
+    round = 0;
+    phaseIndex = 0;
+    nextPhase();
+  }
+
+  function nextPhase() {
+    if (round >= totalRounds) {
+      document.getElementById("phase").innerText = "Stillness";
+      document.getElementById("round").innerText = "Six rounds complete";
+      document.getElementById("count").innerText = "✓";
+      playChime(256, 1);
+      return;
+    }
+
+    const phase = phases[phaseIndex];
+    let remaining = phase.time;
+
+    updateText(phase.name, `Round ${round + 1} of ${totalRounds}`, remaining);
+    playChime(phase.tone);
+
+    timer = setInterval(() => {
+      remaining--;
+      document.getElementById("count").innerText = remaining;
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        phaseIndex++;
+
+        if (phaseIndex >= phases.length) {
+          phaseIndex = 0;
+          round++;
+        }
+
+        setTimeout(nextPhase, 600);
+      }
+    }, 1000);
+  }
+
+  function updateText(phase, roundText, count) {
+    const p = document.getElementById("phase");
+    const r = document.getElementById("round");
+    const c = document.getElementById("count");
+
+    p.classList.remove("fade");
+    c.classList.remove("fade");
+    void p.offsetWidth; // reset animation
+
+    p.innerText = phase;
+    r.innerText = roundText;
+    c.innerText = count;
+
+    p.classList.add("fade");
+    c.classList.add("fade");
+  }
+</script>
+
+</body>
+</html>
