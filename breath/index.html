@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Tantra.exe · Breath</title>
 
-  <!-- Elegant, readable fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -41,8 +41,7 @@
       width: 360px;
       padding: 46px 38px;
       border-radius: 22px;
-      background:
-        linear-gradient(180deg, var(--bg-mid), #0f0f14);
+      background: linear-gradient(180deg, var(--bg-mid), #0f0f14);
       box-shadow:
         0 40px 80px rgba(0,0,0,0.6),
         inset 0 0 0 1px rgba(255,255,255,0.04);
@@ -51,7 +50,6 @@
       overflow: hidden;
     }
 
-    /* Soft colour bloom */
     .ritual::before {
       content: "";
       position: absolute;
@@ -61,16 +59,32 @@
       pointer-events: none;
     }
 
+    /* Back link */
+    .back {
+      position: absolute;
+      top: 18px;
+      left: 22px;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .back:hover {
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(201,162,77,0.45);
+    }
+
     .sigil {
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 0.65rem;
-  font-weight: 400;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.75;
-  margin-bottom: 18px;
-}
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+      margin-bottom: 18px;
+    }
 
     .phase {
       font-family: "Cormorant Garamond", serif;
@@ -120,16 +134,18 @@
 
 <body>
 
-<div class="ritual">
-  <div class="sigil">Tantra.exe</div>
-  <div class="phase" id="phase">Ready</div>
-  <div class="round" id="round">—</div>
-  <div class="count" id="count">—</div>
-  <button onclick="startBreathing()">Begin</button>
-</div>
+  <div class="ritual">
+    <a class="back" href="https://aibutintimate.github.io/Tantra.exe/">← back</a>
+
+    <div class="sigil">Tantra.exe</div>
+    <div class="phase" id="phase">Ready</div>
+    <div class="round" id="round">—</div>
+    <div class="count" id="count">—</div>
+    <button onclick="startBreathing()">Begin</button>
+  </div>
 
 <script>
-  /* ---------------- CONFIG ---------------- */
+  /* ---------- CONFIG ---------- */
   const phases = [
     { name: "Inhale", time: 4, tone: 356, color: "var(--inhale)" },
     { name: "Hold",   time: 4, tone: 356, color: "var(--hold)" },
@@ -143,7 +159,7 @@
   let timer;
   let audioCtx;
 
-  /* ---------------- CHIME ---------------- */
+  /* ---------- CHIME ---------- */
   function playChime(freq, duration = 0.45) {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -167,7 +183,7 @@
     osc.stop(now + duration);
   }
 
-  /* ---------------- FLOW ---------------- */
+  /* ---------- FLOW ---------- */
   function startBreathing() {
     clearInterval(timer);
     round = 0;
