@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Tantra.exe</title>
+  <title>Tantra.exe · Digital Drishti</title>
 
   <!-- Shared fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,8 +37,7 @@
       width: 380px;
       padding: 54px 42px;
       border-radius: 24px;
-      background:
-        linear-gradient(180deg, var(--bg-mid), #0f0f14);
+      background: linear-gradient(180deg, var(--bg-mid), #0f0f14);
       box-shadow:
         0 40px 80px rgba(0,0,0,0.6),
         inset 0 0 0 1px rgba(255,255,255,0.04);
@@ -57,15 +56,32 @@
       pointer-events: none;
     }
 
+    /* Back link */
+    .back {
+      position: absolute;
+      top: 18px;
+      left: 22px;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .back:hover {
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(201,162,77,0.45);
+    }
+
     .sigil {
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 0.65rem;
-  font-weight: 400;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.75;
-}
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+      margin-bottom: 10px;
+    }
 
     h1 {
       font-family: "Cormorant Garamond", serif;
@@ -81,7 +97,14 @@
       margin-bottom: 34px;
     }
 
-    a {
+    .ritual-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .ritual-links a {
       display: inline-block;
       text-decoration: none;
       border: 1px solid var(--gold);
@@ -93,14 +116,7 @@
       transition: all 0.35s ease;
     }
 
-  .ritual-links {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 28px;
-}
-    
-    a:hover {
+    .ritual-links a:hover {
       background: rgba(201,162,77,0.12);
       box-shadow: 0 0 24px rgba(201,162,77,0.25);
     }
@@ -118,6 +134,8 @@
 <body>
 
   <div class="landing">
+    <a class="back" href="https://aibutintimate.github.io/Tantra.exe/">← back</a>
+
     <div class="sigil">Tantra.exe</div>
 
     <h1>Tantra.exe</h1>
@@ -127,10 +145,10 @@
       connection, and embodied attention.
     </div>
 
- <div class="ritual-links">
-  <a href="./breath/">Enter Breath</a>
-  <a href="./drishti/">Digital Drishti</a>
-</div>
+    <div class="ritual-links">
+      <a href="./breath/">Enter Breath</a>
+      <a href="./drishti/">Digital Drishti</a>
+    </div>
 
     <div class="whisper">
       Begin where you are.
