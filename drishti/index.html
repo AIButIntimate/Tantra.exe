@@ -55,10 +55,26 @@
       pointer-events: none;
     }
 
+    /* Back link */
+    .back {
+      position: absolute;
+      top: 18px;
+      left: 22px;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .back:hover {
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(201,162,77,0.45);
+    }
+
     .sigil {
-      font-family: "Inter", system-ui, sans-serif;
       font-size: 0.65rem;
-      font-weight: 400;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--gold);
@@ -116,20 +132,22 @@
 
 <body>
 
-<div class="ritual">
-  <div class="sigil">Tantra.exe</div>
+  <div class="ritual">
+    <a class="back" href="https://aibutintimate.github.io/Tantra.exe/">← back</a>
 
-  <div class="title">Digital Drishti</div>
-  <div class="subtitle">Two minutes of shared gaze</div>
+    <div class="sigil">Tantra.exe</div>
 
-  <div class="timer" id="timer">2:00</div>
+    <div class="title">Digital Drishti</div>
+    <div class="subtitle">Two minutes of shared gaze</div>
 
-  <button onclick="startTimer()">Begin</button>
+    <div class="timer" id="timer">2:00</div>
 
-  <div class="whisper">
-    Stay. Breathe. Do not look away.
+    <button onclick="startTimer()">Begin</button>
+
+    <div class="whisper">
+      Stay. Breathe. Do not look away.
+    </div>
   </div>
-</div>
 
 <script>
   /* ---------------- AUDIO ---------------- */
@@ -178,7 +196,7 @@
       if (totalSeconds <= 0) {
         clearInterval(interval);
         document.getElementById("timer").innerText = "—";
-        playChime(); // 356 Hz completion bell
+        playChime(); // completion bell
       }
     }, 1000);
   }
